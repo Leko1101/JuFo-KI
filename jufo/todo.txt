@@ -1,0 +1,10 @@
+1. torch lernen
+    a) layer verstehen
+    b) forward funktion 
+    c) (batches)
+
+2. cuda treiber installieren
+3. Aktivierungsfunktionm + relu lernen
+4. Pooling in CNN
+5. Softmax
+6. ssd checken
