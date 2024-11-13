@@ -1,10 +1,9 @@
 1. torch lernen
-    a) layer verstehen
-    b) forward funktion 
-    c) (batches)
+    a) layer verstehen   x
+    b) forward funktion  x
+    c) (batches)         y
 
-2. cuda treiber installieren
-3. Aktivierungsfunktionm + relu lernen
-4. Pooling in CNN
-5. Softmax
-6. ssd checken
+2. cuda treiber installieren y
+3. Aktivierungsfunktionm + relu lernen x
+4. Pooling in CNN x
+5. Softmax x
