@@ -1,0 +1,7 @@
+// dataset cropandweed is used
+// label isWeed is to add
+// function to iterate all to keepPlanted true or false
+// use yolo model
+// train model
+// instead of dataset use input from camera 
+// ready proof-of-concept
