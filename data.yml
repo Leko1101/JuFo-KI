@@ -1,0 +1,106 @@
+path: F:\Projects\Code\JuFo-KI\dataset
+train: images/train
+val: images/val
+
+names:
+  0: Soil
+  1: Maize
+  2: Maize two-leaf stage
+  3: Maize four-leaf stage
+  4: Maize six-leaf stage
+  5: Maize eight-leaf stage
+  6: Maize max
+  7: Sugar beet
+  8: Sugar beet two-leaf stage
+  9: Sugar beet four-leaf stage
+  10: Sugar beet six-leaf stage
+  11: Sugar beet eight-leaf stage
+  12: Sugar beet Max
+  13: Pea
+  14: Courgette
+  15: Pumpkins
+  16: Radish
+  17: Asparagus
+  18: Potato
+  19: Flat leaf parsley
+  20: Curly leaf parsley
+  21: Cowslip
+  22: Poppy
+  23: Hemp
+  24: Sunflower
+  25: Sage
+  26: Common bean
+  27: Faba bean
+  28: Clover
+  29: Hybrid goosefoot
+  30: Black-bindweed
+  31: Cockspur grass
+  32: Red-root amaranth
+  33: White goosefoot
+  34: Thorn apple
+  35: Potato weed
+  36: German chamomile
+  37: Saltbush
+  38: Creeping thistle
+  39: Field milk thistle
+  40: Purslane
+  41: Black nightshade
+  42: Mercuries
+  43: Spurge
+  44: Pale persicaria
+  45: Geraniums
+  46: Cleavers
+  47: Whitetop
+  48: Meadow-grass
+  49: Frosted orach
+  50: Black horehound
+  51: Shepherds purse
+  52: Field bindweed
+  53: Common mugwort
+  54: Hedge mustard
+  55: Groundsel
+  56: Speedwell
+  57: Broadleaf plantain
+  58: White ball-mustard
+  59: Peppermint
+  60: Field pennycress
+  61: Corn spurry
+  62: Purple crabgrass
+  63: Common fumitory
+  64: Ivy-leaved speedwell
+  65: Annual meadow grass
+  66: Redshank
+  67: Common hemp-nettle
+  68: Rough meadow-grass
+  69: Green bristlegrass
+  70: Small geranium
+  71: Cornflower
+  72: Common corn-cockle
+  73: Creeping crowfoot
+  74: Wall barley
+  75: Annual fescue
+  76: Purple dead-nettle
+  77: Ribwort plantain
+  78: Pineappleweed
+  79: Common chickweed
+  80: Hedge mustard
+  81: Soft brome
+  82: Wild pansy
+  83: Yellow rocket
+  84: Common wild oat
+  85: Red poppy
+  86: Rye brome
+  87: Knotgrass
+  88: Prickly lettuce
+  89: Copse-bindweed
+  90: Manyseeds
+  91: Common buckwheat
+  92: Chives
+  93: Garlic
+  94: Soybean
+  95: Wild carrot
+  96: Field mustard
+  97: Giant fennel
+  98: Common horsetail
+  99: Common dandelion
+  100: Vegetation
