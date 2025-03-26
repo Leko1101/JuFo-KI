@@ -15,3 +15,6 @@
 3. Aktivierungsfunktionm + relu lernen x
 4. Pooling in CNN x
 5. Softmax x
+
+freeze pip requirments in venv
+fix local imports
