@@ -1,0 +1,9 @@
+# data
+data
+dataset
+
+# model training
+runs
+
+# models
+yolo*.pt
