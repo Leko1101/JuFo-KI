@@ -30,8 +30,8 @@ for image in os.listdir(image_dir):
 
         width = (right - left) / 1920
         height = (bottom - top) / 1088
-        center_x = width + left / 1920
-        center_y = height + top / 1088
+        center_x = (width + left) / 2 / 1920
+        center_y = (height + top) / 2 /1088
 
         label_content += f"{label_id} {center_x} {center_y} {width} {height}\n"
 
