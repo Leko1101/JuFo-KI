@@ -104,7 +104,7 @@ def run() -> None:
     
     timer = QTimer()
     timer.timeout.connect(update_image_if_needed)
-    timer.start(10)
+    timer.start(100)
     
     window.show()
     app.exec()
