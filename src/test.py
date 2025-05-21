@@ -15,7 +15,7 @@ def run(param_image_path):
     image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
 
     # Run inference
-    results = model(image, device="cpu")
+    results = model(image, device= "cpu")
 
     # Draw bounding boxes
     for r in results:
