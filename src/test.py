@@ -35,4 +35,4 @@ def run(param_image_path):
     plt.show()
 
 if __name__ == "__main__":
-    run()
+    run("20250509_171308.jpg")
