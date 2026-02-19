@@ -1,5 +1,6 @@
 from PIL import Image, ImageEnhance, ImageFilter, ImageOps
 import random
+import pandas as pd
 from plant_species import plant_species_map
 #import matplotlib.pyplot as plt
 #import matplotlib.image as mpimg
@@ -10,12 +11,13 @@ number_plant_species = 23
 number_augmented_imgs = 100
 DESTINATION_PATH = "./dest_imgs"
 
-def create_augmented_img():
+def create_augmented_img(number_img):
     ext = ".png"
     ground_img = random.randint(0,9)
     number_plants_in_img = random.randint(1,25)
 
     plants_in_img = []
+    plants_data = []  # List to store plant data with species_id
 
     background = Image.open(f"./src_imgs/ground/{ground_img}{ext}").convert("RGBA")
     
@@ -28,21 +30,13 @@ def create_augmented_img():
         
         foreground = Image.open(f"./src_imgs/{species_name}/{plant_specimen}{ext}").convert("RGBA")
 
-        resizing_factor = random.random()* 0.2 + 0.1
-        foreground = foreground.resize([int(foreground.width*resizing_factor), int(foreground.height*resizing_factor)])
+        # Apply transformations BEFORE calculating positions
+        foreground = foreground.rotate(random.random() * 360, expand = True)
 
-        foreground_x = (random.randint(0, 600 - foreground.width)) 
-        foreground_y = (random.randint(0, 600 - foreground.height)) 
-
-        foreground_x2 = foreground_x + foreground.width
-        foreground_y2 = foreground_y + foreground.height
-
-        foreground.rotate(random.random() * 360, expand = True)
-
-        ImageEnhance.Brightness(foreground).enhance(random.random()* 1 + 0.5)
-        ImageEnhance.Contrast(foreground).enhance(random.random()* 1 + 0.5)
-        ImageEnhance.Color(foreground).enhance(random.random()* 0.001 + 0.0095)
-        ImageEnhance.Sharpness(foreground).enhance(random.random()* 0.6 + 0.7)
+        foreground = ImageEnhance.Brightness(foreground).enhance(random.random()* 1 + 0.5)
+        foreground = ImageEnhance.Contrast(foreground).enhance(random.random()* 1 + 0.5)
+        foreground = ImageEnhance.Color(foreground).enhance(random.random()* 0.2 + 0.9)
+        foreground = ImageEnhance.Sharpness(foreground).enhance(random.random()* 0.6 + 0.7)
 
         sharpen_or_blur = random.randint(0,1)
         if sharpen_or_blur == 0:
@@ -53,6 +47,25 @@ def create_augmented_img():
         bool_smooth = random.randint(0,1)
         if bool_smooth == 1:
             foreground = foreground.filter(ImageFilter.SMOOTH)
+
+        # Calculate positions AFTER all transformations
+
+        ratio = foreground.height / foreground.width
+        if ratio > 1:
+            ratio = foreground.width / foreground.height 
+            new_size = [int(600*ratio), 600]
+        else: 
+            new_size = [600, int(600 * ratio)]
+        foreground = foreground.resize(new_size)
+
+        resizing_factor = random.random()* 0.2 + 0.1
+        foreground = foreground.resize([int(foreground.width*resizing_factor), int(foreground.height*resizing_factor)])
+        
+        foreground_x = (random.randint(0, 600 - foreground.width)) 
+        foreground_y = (random.randint(0, 600 - foreground.height)) 
+
+        foreground_x2 = foreground_x + foreground.width
+        foreground_y2 = foreground_y + foreground.height
 
         #if random.random() < 0.3:  # Apply to 30% of images
         #    width, height = foreground.size
@@ -94,8 +107,6 @@ def create_augmented_img():
                 i += 1
                 if i > 3:
                     placement_failed = True
-                    print("failed to place image")
-                    plants_in_img.append((foreground_x, foreground_y, foreground_x2, foreground_y2))
                     break
 
                 foreground_x = (random.randint(0, 600 - foreground.width)) 
@@ -104,17 +115,50 @@ def create_augmented_img():
                 foreground_x2 = foreground_x + foreground.width
                 foreground_y2 = foreground_y + foreground.height
 
-            plants_in_img.append((foreground_x, foreground_y, foreground_x2, foreground_y2))
-
         if placement_failed == True:
             break 
 
+        plants_in_img.append((foreground_x, foreground_y, foreground_x2, foreground_y2))
+        
+        # Store plant data: species_id, center_x, center_y, width, height
+        width = foreground_x2 - foreground_x
+        height = foreground_y2 - foreground_y
+        center_x = foreground_x + width / 2
+        center_y = foreground_y + height / 2
+        plants_data.append({
+            'species_id': plant_species,
+            'center_x': center_x,
+            'center_y': center_y,
+            'width': width,
+            'height': height
+        })
+
         background.paste(foreground, (foreground_x,foreground_y), foreground)
-        background.save("test.png")
+    background.save(f"./dest_imgs/{number_img}{ext}")
+    
+    return plants_data
         
         
 if __name__ == "__main__":
+    output_file = "plants_annotations.csv"
+    
+    # Create CSV file with header
+    with open(output_file, 'w') as f:
+        f.write("species_id,center_x,center_y,width,height\n")
+    
+    total_plants = 0
     for i in range(number_augmented_imgs):
-        create_augmented_img()
+        plants_data = create_augmented_img(i)
+        
+        # Append data to CSV incrementally
+        df = pd.DataFrame(plants_data, columns=['species_id', 'center_x', 'center_y', 'width', 'height'])
+        df.to_csv(output_file, mode='a', header=False, index=False)
+        
+        #total_plants += len(plants_data)
+        #if (i + 1) % 10 == 0:
+        #    print(f"Generated {i + 1}/{number_augmented_imgs} images, {total_plants} plants so far")
+    
+    print(f"\nTotal plants generated: {total_plants}")
+    print(f"Data saved to: {output_file}")
 
 
