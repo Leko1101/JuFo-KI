@@ -28,7 +28,7 @@ for i in range(number_plant_species+1):
             img = img.resize([600,600])
         else:
             ratio = height / width
-            new_size = [100, int(100 * ratio)]
+            new_size = [600, int(600 * ratio)]
             img = img.resize(new_size)
         img.save(img_path)
 
