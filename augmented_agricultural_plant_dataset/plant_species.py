@@ -22,5 +22,5 @@ plant_species_map = {
     20: "shepherds_purse",
     21: "white_clover",
     22: "white_goosefoot",
-    23: "wild foxtail"
+    23: "wild_foxtail"
 }
