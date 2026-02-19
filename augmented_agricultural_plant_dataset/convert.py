@@ -15,19 +15,23 @@ for root, dirs, files in os.walk(BASE_PATH):
             os.rename(old_path, new_path)
 
 number_plant_species = 23
-ext = ".png"
+ext = ".png"     
 
 for i in range(number_plant_species+1):
     species_name = plant_species_map[i]
-    for i in range(10):
-        img_path = f"./src_imgs/{species_name}/{i}{ext}"
+    for j in range(10):
+        img_path = f"./src_imgs/{species_name}/{j}{ext}"
         img = Image.open(img_path)
+        width = img.width
+        height = img.height
         if species_name == "ground":
-            img = img.resize([600,600]) 
+            img = img.resize([600,600])
         else:
-            img = img.resize([100,100])
+            ratio = height / width
+            new_size = [100, int(100 * ratio)]
+            img = img.resize(new_size)
         img.save(img_path)
-        
+
 
 
 
