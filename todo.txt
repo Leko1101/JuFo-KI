@@ -18,3 +18,12 @@
 
 freeze pip requirments in venv
 fix local imports
+
+
+
+finish cornflower y
+finish couch grass 
+finish dandelion
+finish field knotweed
+finish ground elder
+field thistle

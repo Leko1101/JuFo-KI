@@ -1,31 +1,38 @@
 from ultralytics import YOLO
 import cv2
 import matplotlib.pyplot as plt
+import torch
+import os
 
-# Load the model
-model = YOLO("yolov11n.pt")  # Using a pre-trained YOLOv8 nano model
+def run(param_image_path):
 
-# Load the image
-image_path = "./datasets/images/val/ave-0053-0019.jpg"  # Replace with your image path
-image = cv2.imread(image_path)
-image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+    # Load the model
+    model = YOLO("best.pt",)  # Using a pre-trained YOLOv8 nano model
 
-# Run inference
-results = model(image)
+    # Load the image
+    image_path = param_image_path  # Replace with your image path
+    image = cv2.imread(image_path)
+    image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
 
-# Draw bounding boxes
-for r in results:
-    for box in r.boxes:
-        x1, y1, x2, y2 = map(int, box.xyxy[0])  # Get box coordinates
-        conf = box.conf[0].item()  # Confidence score
-        cls = int(box.cls[0].item())  # Class ID
+    # Run inference
+    results = model(image, device= "cpu")
 
-        # Draw rectangle and label
-        cv2.rectangle(image, (x1, y1), (x2, y2), (255, 0, 0), 2)
-        cv2.putText(image, f"{model.names[cls]} {conf:.2f}", (x1, y1 - 10),
-                    cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 0, 0), 2)
+    # Draw bounding boxes
+    for r in results:
+        for box in r.boxes:
+            x1, y1, x2, y2 = map(int, box.xyxy[0])  # Get box coordinates
+            conf = box.conf[0].item()  # Confidence score
+            cls = int(box.cls[0].item())  # Class ID
 
-# Show image
-plt.imshow(image)
-plt.axis("off")
-plt.show()
+            # Draw rectangle and label
+            cv2.rectangle(image, (x1, y1), (x2, y2), (255, 0, 0), 2)
+            cv2.putText(image, f"{model.names[cls]} {conf:.2f}", (x1, y1 - 10),
+                        cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 0, 0), 2)
+
+    # Show image
+    plt.imshow(image)
+    plt.axis("off")
+    plt.show()
+
+if __name__ == "__main__":
+    run("20250509_171308.jpg")
