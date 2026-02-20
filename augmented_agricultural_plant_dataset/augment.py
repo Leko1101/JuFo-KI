@@ -6,7 +6,7 @@ from multiprocessing import Pool, cpu_count
 from plant_species import plant_species_map
 
 number_plant_species = 23
-number_augmented_imgs = 100
+number_augmented_imgs = 1
 DESTINATION_PATH = "./dest_imgs"
 ext = ".png"
 
@@ -134,7 +134,7 @@ if __name__ == "__main__":
     num_workers = max(1, cpu_count() - 1)
     print(f"Using {num_workers} workers")
 
-    with Pool(processes=num_workers, initializer=init_worker, initargs=(10,)) as pool:
+    with Pool(processes=num_workers, initializer=init_worker, initargs=(2,)) as pool:
         # todo images should have a unique id. ID must also be present in csv
         results = pool.map(create_augmented_img, range(number_augmented_imgs))
 
