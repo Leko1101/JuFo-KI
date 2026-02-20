@@ -1,13 +1,14 @@
 from PIL import Image, ImageEnhance, ImageFilter, ImageOps
 import random
-import csv
 import os
 from multiprocessing import Pool, cpu_count
 from plant_species import plant_species_map
 
-number_plant_species = 23
-number_augmented_imgs = 1
-DESTINATION_PATH = "./dest_imgs"
+IMG_SIZE = 600
+number_plant_species = 30
+number_augmented_imgs = 30
+val_split = 0.2
+DATASET_PATH = "./dataset"
 ext = ".png"
 
 # These will be loaded per-process
@@ -46,7 +47,7 @@ def create_augmented_img(number_img):
     for _ in range(number_plants_in_img + 1):
 
         placement_failed = False
-        plant_species = random.randint(1, 23)
+        plant_species = random.randint(1, number_plant_species)
         plant_specimen = random.randint(0, 9)
 
         foreground = plant_images[plant_species][plant_specimen]
@@ -119,32 +120,43 @@ def create_augmented_img(number_img):
             break
 
         plants_in_img.append((foreground_x, foreground_y, foreground_x2, foreground_y2))
-        plants_data.append((plant_species, foreground_x + fw / 2, foreground_y + fh / 2, fw, fh))
+        # Normalize to 0-1 for YOLO format
+        plants_data.append((
+            plant_species,
+            (foreground_x + fw / 2) / IMG_SIZE,
+            (foreground_y + fh / 2) / IMG_SIZE,
+            fw / IMG_SIZE,
+            fh / IMG_SIZE
+        ))
 
         background.paste(foreground, (foreground_x, foreground_y), foreground)
 
-    background.save(f"./dest_imgs/{number_img}{ext}")
+    # Decide train or val
+    split = "val" if random.random() < val_split else "train"
+
+    background.save(os.path.join(DATASET_PATH, "images", split, f"{number_img}{ext}"))
+
+    # Write YOLO .txt label (space-separated, no header)
+    label_path = os.path.join(DATASET_PATH, "labels", split, f"{number_img}.txt")
+    with open(label_path, 'w') as f:
+        for species_id, cx, cy, w, h in plants_data:
+            f.write(f"{species_id} {cx:.6f} {cy:.6f} {w:.6f} {h:.6f}\n")
+
     return plants_data
 
 
 if __name__ == "__main__":
-    os.makedirs(DESTINATION_PATH, exist_ok=True)
-    output_file = "plants_annotations.csv"
+    for split in ["train", "val"]:
+        os.makedirs(os.path.join(DATASET_PATH, "images", split), exist_ok=True)
+        os.makedirs(os.path.join(DATASET_PATH, "labels", split), exist_ok=True)
 
     num_workers = max(1, cpu_count() - 1)
     print(f"Using {num_workers} workers")
 
     with Pool(processes=num_workers, initializer=init_worker, initargs=(2,)) as pool:
-        # todo images should have a unique id. ID must also be present in csv
-        results = pool.map(create_augmented_img, range(number_augmented_imgs))
-
-    with open(output_file, 'w', newline='') as f:
-        writer = csv.writer(f)
-        writer.writerow(['species_id', 'center_x', 'center_y', 'width', 'height'])
-        for plants_data in results:
-            writer.writerows(plants_data)
+        pool.map(create_augmented_img, range(number_augmented_imgs))
 
     print(f"Generated {number_augmented_imgs} images")
-    print(f"Data saved to: {output_file}")
+    print(f"Dataset saved to: {DATASET_PATH}/")
 
 

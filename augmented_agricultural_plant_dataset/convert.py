@@ -14,7 +14,7 @@ for root, dirs, files in os.walk(BASE_PATH):
         if old_path != new_path:
             os.rename(old_path, new_path)
 
-number_plant_species = 23
+number_plant_species = 30
 ext = ".png"     
 
 for i in range(number_plant_species+1):
