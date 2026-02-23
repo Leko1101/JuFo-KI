@@ -33,14 +33,14 @@ def load_ground_truth(image_path, img_w, img_h, names):
     return boxes
 
 def run(param_image_path, includeGroundTruth=False):
-
     # Load the model
-    # model = YOLO("best.pt",)  # Using a pre-trained YOLOv8 nano model
     model = YOLO("runs/detect/train12/weights/best.pt")
 
     # Load the image (keep BGR for YOLO — it handles BGR→RGB internally)
     image_path = param_image_path
     image = cv2.imread(image_path)
+    if image is None:
+        raise FileNotFoundError(f"Image not found or unreadable: {image_path}")
     img_h, img_w = image.shape[:2]
 
     # Run inference on BGR image (YOLO expects BGR input)
@@ -79,4 +79,4 @@ def run(param_image_path, includeGroundTruth=False):
     plt.show()
 
 if __name__ == "__main__":
-    run("../augmented_agricultural_plant_dataset/dataset/images/val/254.png")
+    run("../augmented_agricultural_plant_dataset/dataset/images/val/15.png")
