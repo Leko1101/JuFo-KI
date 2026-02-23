@@ -44,7 +44,7 @@ def run(param_image_path, includeGroundTruth=False):
     img_h, img_w = image.shape[:2]
 
     # Run inference on BGR image (YOLO expects BGR input)
-    results = model(image, device=0)
+    results = model(image, device="cpu")
 
     # Draw ground truth bounding boxes (green)
     if includeGroundTruth:
@@ -79,4 +79,4 @@ def run(param_image_path, includeGroundTruth=False):
     plt.show()
 
 if __name__ == "__main__":
-    run("../augmented_agricultural_plant_dataset/dataset/images/val/15.png")
+    run("../augmented_agricultural_plant_dataset/dataset/images/train/7.png")
