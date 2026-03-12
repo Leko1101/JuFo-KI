@@ -6,7 +6,7 @@ from plant_species import plant_species_map
 
 IMG_SIZE = 600
 number_plant_species = 30
-number_augmented_imgs = 30
+number_augmented_imgs = 10
 val_split = 0.2
 DATASET_PATH = "./dataset"
 ext = ".png"
@@ -62,28 +62,45 @@ def create_augmented_img(number_img):
         else:
             new_w = max(1, int(600 * resizing_factor))
             new_h = max(1, int(600 * ratio * resizing_factor))
-        foreground = foreground.resize((new_w, new_h), Image.NEAREST)
+        foreground = foreground.resize((new_w, new_h), Image.LANCZOS)
 
         # Rotate small image
-        foreground = foreground.rotate(random.random() * 360, expand=True)
 
-        # Apply only one enhancement randomly instead of all four
-        aug_choice = random.randint(0, 3)
-        if aug_choice == 0:
-            foreground = ImageEnhance.Brightness(foreground).enhance(random.random() + 0.5)
-        elif aug_choice == 1:
-            foreground = ImageEnhance.Contrast(foreground).enhance(random.random() + 0.5)
-        elif aug_choice == 2:
-            foreground = ImageEnhance.Color(foreground).enhance(random.random() * 0.2 + 0.9)
-        else:
-            foreground = ImageEnhance.Sharpness(foreground).enhance(random.random() * 0.6 + 0.7)
+        foreground = foreground.rotate(random.random() * 360, expand=True, fillcolor=(255, 255, 255, 0))
 
-        # Apply filter (one or none)
-        filter_choice = random.randint(0, 2)
-        if filter_choice == 0:
-            foreground = foreground.filter(ImageFilter.SHARPEN)
-        elif filter_choice == 1:
-            foreground = foreground.filter(ImageFilter.SMOOTH)
+        #Split RGBA and merge to RGB before enhancements
+        r_img, g_img, b_img, a_img = foreground.split()
+        rgb_img = Image.merge('RGB', (r_img, g_img, b_img))
+
+        # Apply enhancements only to RGB
+    
+        foreground = ImageEnhance.Brightness(foreground).enhance(random.random() + 0.5)
+        foreground = ImageEnhance.Contrast(foreground).enhance(random.random() + 0.5)
+        foreground = ImageEnhance.Color(foreground).enhance(random.random() * 0.2 + 0.9)
+        #foreground = ImageEnhance.Sharpness(foreground).enhance(random.random() * 0.2 + 0.9)
+
+        # Apply filter
+        #if filter_choice == 0:
+        #   foreground = foreground.filter(ImageFilter.SHARPEN)
+        #elif filter_choice == 1:
+        #Check usefulness
+        #if(random.random() > 0.8) {
+        #    foreground = foreground.filter(ImageFilter.SMOOTH)
+        #}
+
+        #if(random.random() > 0.8) {
+        #    foreground = foreground.filter(ImageFilter.CONTOUR)
+        #}
+
+        #if(random.random() > 0.8) {
+        #    foreground = foreground.filter(ImageFilter.BLUR)
+        #}
+
+        #if(random.random() > 0.8) {
+        #    foreground = foreground.filter(ImageFilter.DETAIL)
+        #}
+
+        foreground = Image.merge('RGBA', (*rgb_img.split(), a_img))
 
         # Ensure foreground fits within 600x600
         if foreground.width >= 600 or foreground.height >= 600:
