@@ -6,7 +6,7 @@ from plant_species import plant_species_map
 
 IMG_SIZE = 600
 number_plant_species = 30
-number_augmented_imgs = 10
+number_augmented_imgs = 30
 val_split = 0.2
 DATASET_PATH = "./dataset"
 ext = ".png"
@@ -66,7 +66,7 @@ def create_augmented_img(number_img):
 
         # Rotate small image
 
-        foreground = foreground.rotate(random.random() * 360, expand=True, fillcolor=(255, 255, 255, 0))
+        foreground = foreground.rotate(random.random() * 360, expand=True, fillcolor=(0, 0, 0, 0))
 
         #Split RGBA and merge to RGB before enhancements
         r_img, g_img, b_img, a_img = foreground.split()
@@ -100,7 +100,13 @@ def create_augmented_img(number_img):
         #    foreground = foreground.filter(ImageFilter.DETAIL)
         #}
 
+        #Blur Alpha Channel
+        a_img = a_img.filter(ImageFilter.GaussianBlur(radius=1.5))
+        #a_img = a_img.point(lambda x: 255 if x > 200 else 0)
+        
+
         foreground = Image.merge('RGBA', (*rgb_img.split(), a_img))
+        
 
         # Ensure foreground fits within 600x600
         if foreground.width >= 600 or foreground.height >= 600:
@@ -119,8 +125,7 @@ def create_augmented_img(number_img):
         # Collision detection
         for (prev_x, prev_y, prev_x2, prev_y2) in plants_in_img:
             attempts = 0
-            while (foreground_x < prev_x2 and foreground_x2 > prev_x and
-                   foreground_y < prev_y2 and foreground_y2 > prev_y):
+            while (foreground_x < prev_x2 and foreground_x2 > prev_x and foreground_y < prev_y2 and foreground_y2 > prev_y):
                 attempts += 1
                 if attempts > 3:
                     placement_failed = True
