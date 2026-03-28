@@ -19,15 +19,14 @@ plant_species_map = {
     17: "loose_silky-bent",
     18: "poppy",
     19: "lucerne",
-    20: "phacelia",
-    21: "potato",
+    20: "potato",
+    21: "red_clover",
     22: "shaggy_soldier",
-    23: "red_clover",
+    23: "white_clover",
     24: "shepherds_purse",
-    25: "white_clover",
-    26: "sugar_beet",
-    27: "sunflower",
-    28: "white_goosefoot",
-    29: "wild_foxtail",
-    30: "winter_wheat"
+    25: "wild_foxtail",
+    26: "white_goosefoot",
+    27: "rye",
+    28: "winter_wheat"
+     
 }

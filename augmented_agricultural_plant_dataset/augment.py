@@ -5,7 +5,7 @@ from multiprocessing import Pool, cpu_count
 from plant_species import plant_species_map
 
 IMG_SIZE = 600
-number_plant_species = 30
+number_plant_species = 27
 number_augmented_imgs = 30
 val_split = 0.2
 DATASET_PATH = "./dataset"
